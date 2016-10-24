@@ -54,6 +54,21 @@ public class BabysitterSchedule {
         return hoursWorkedBeforeMidnightBeforeBedtime;
     }
 
+    public int getHoursWorkedBeforeMidnightAfterBedtime() {
+        int hoursWorkedBeforeMidnightAfterBedtime = 0;
+
+        System.out.println("0");
+        if(!isAfterMidnight(startTime)) {
+            System.out.println("1");
+            if(!isAfterMidnight(bedTime)) {
+                System.out.println("2");
+                hoursWorkedBeforeMidnightAfterBedtime = MIDNIGHT_24 - bedTime.getHour();
+            }
+        }
+
+        return hoursWorkedBeforeMidnightAfterBedtime;
+    }
+
     public LocalTime getStartTime() {
         return startTime;
     }
