@@ -61,7 +61,7 @@ public class BabysitterSchedule {
             if(!isAfterMidnight(bedTime)) {
                 if(isAfterMidnight(endTime)){
                     hoursWorkedBeforeMidnightAfterBedtime = MIDNIGHT_24 - bedTime.getHour();
-                } else {
+                } else if(bedTime.isBefore(endTime)) {
                     hoursWorkedBeforeMidnightAfterBedtime = Math.toIntExact(ChronoUnit.HOURS.between(bedTime, endTime));
                 }
             }
