@@ -28,10 +28,11 @@ public class BabysitterSchedule {
         int hoursWorkedAfterMidnight = 0;
         LocalTime afterMidnightStartTime = startTime;
 
-        if(!endTime.isAfter(LATEST_END_TIME)) {
-            if(!startTime.isBefore(EARLIEST_START_TIME)) {
+        if(isAfterMidnight(endTime)) {
+            if(!isAfterMidnight(startTime)) {
                 afterMidnightStartTime = LocalTime.MIDNIGHT;
             }
+
             hoursWorkedAfterMidnight = Math.toIntExact(ChronoUnit.HOURS.between(afterMidnightStartTime, endTime));
         }
 
@@ -42,8 +43,8 @@ public class BabysitterSchedule {
         int hoursWorkedBeforeMidnightBeforeBedtime = 0;
         LocalTime beforeMidnightEndTime = endTime;
 
-        if(!startTime.isBefore(EARLIEST_START_TIME)) {
-            if(!endTime.isAfter(LATEST_END_TIME)) {
+        if(!isAfterMidnight(startTime)) {
+            if(isAfterMidnight(endTime)) {
                 hoursWorkedBeforeMidnightBeforeBedtime = MIDNIGHT_24 - startTime.getHour();
             } else {
                 hoursWorkedBeforeMidnightBeforeBedtime = Math.toIntExact(ChronoUnit.HOURS.between(startTime, beforeMidnightEndTime));
@@ -86,6 +87,15 @@ public class BabysitterSchedule {
     public void setBedTime(LocalTime bedTime) {
         this.bedTime = roundUpToNextHour(bedTime);
     }
+
+    private boolean isAfterMidnight(LocalTime time) {
+        if(!time.isAfter(LATEST_END_TIME)) {
+            return true;
+        }
+
+        return false;
+    }
+
 
     private LocalTime roundUpToNextHour(LocalTime time) {
 
