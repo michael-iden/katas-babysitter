@@ -115,6 +115,12 @@ public class BabysitterScheduleTest {
     }
 
     @Test
+    public void getHoursWorkedBeforeMidnightBeforeBedTimeStartingAt10PMSleepAt9PMAndLeavingAt3AM() throws  InvalidBabysitterConstraintsException {
+        BabysitterSchedule babysitterSchedule = new BabysitterSchedule(LocalTime.parse("22:00:00"), LocalTime.parse("03:00:00"), LocalTime.parse("21:00:00"));
+        assertEquals(0, babysitterSchedule.getHoursWorkedBeforeMidnightBeforeBedtime());
+    }
+
+    @Test
     public void getHoursWorkedBeforeMidnightAfterBedTimeStartingAt9SleepAt11AndLeavingAtMidnight() throws  InvalidBabysitterConstraintsException {
         BabysitterSchedule babysitterSchedule = new BabysitterSchedule(LocalTime.parse("21:00:00"), LocalTime.MIDNIGHT, LocalTime.parse("23:00:00"));
         assertEquals(1, babysitterSchedule.getHoursWorkedBeforeMidnightAfterBedtime());
@@ -142,6 +148,18 @@ public class BabysitterScheduleTest {
     public void getHoursWorkedBeforeMidnightAfterBedTimeStartingAt1AMSleepAt2AMAndLeavingAt3AM() throws  InvalidBabysitterConstraintsException {
         BabysitterSchedule babysitterSchedule = new BabysitterSchedule(LocalTime.parse("01:00:00"), LocalTime.parse("03:00:00"), LocalTime.parse("02:00:00"));
         assertEquals(0, babysitterSchedule.getHoursWorkedBeforeMidnightAfterBedtime());
+    }
+
+    @Test
+    public void getHoursWorkedBeforeMidnightAfterBedTimeStartingAt10PMSleepAt9PMAndLeavingAt3AM() throws  InvalidBabysitterConstraintsException {
+        BabysitterSchedule babysitterSchedule = new BabysitterSchedule(LocalTime.parse("22:00:00"), LocalTime.parse("03:00:00"), LocalTime.parse("21:00:00"));
+        assertEquals(2, babysitterSchedule.getHoursWorkedBeforeMidnightAfterBedtime());
+    }
+
+    @Test
+    public void getHoursWorkedBeforeMidnightAfterBedTimeStartingAt10PMSleepAt9PMAndLeavingAt11PM() throws  InvalidBabysitterConstraintsException {
+        BabysitterSchedule babysitterSchedule = new BabysitterSchedule(LocalTime.parse("22:00:00"), LocalTime.parse("23:00:00"), LocalTime.parse("21:00:00"));
+        assertEquals(1, babysitterSchedule.getHoursWorkedBeforeMidnightAfterBedtime());
     }
 
     @Test

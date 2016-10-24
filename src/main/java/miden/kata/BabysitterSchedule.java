@@ -44,10 +44,12 @@ public class BabysitterSchedule {
         if(!isAfterMidnight(startTime)) {
             if(isAfterMidnight(endTime) && isAfterMidnight(bedTime)) {
                 hoursWorkedBeforeMidnightBeforeBedtime = MIDNIGHT_24 - startTime.getHour();
-            } else if(bedTime.isBefore(endTime) || isAfterMidnight(endTime)) {
-                hoursWorkedBeforeMidnightBeforeBedtime = Math.toIntExact(ChronoUnit.HOURS.between(startTime, bedTime));
-            } else {
-                hoursWorkedBeforeMidnightBeforeBedtime = Math.toIntExact(ChronoUnit.HOURS.between(startTime, endTime));
+            } else if(bedTime.isAfter(startTime)) {
+                if(bedTime.isBefore(endTime) || isAfterMidnight(endTime)) {
+                    hoursWorkedBeforeMidnightBeforeBedtime = Math.toIntExact(ChronoUnit.HOURS.between(startTime, bedTime));
+                } else if (bedTime.isAfter(endTime) && !isAfterMidnight(endTime)) {
+                    hoursWorkedBeforeMidnightBeforeBedtime = Math.toIntExact(ChronoUnit.HOURS.between(startTime, endTime));
+                }
             }
         }
 
@@ -59,10 +61,14 @@ public class BabysitterSchedule {
 
         if(!isAfterMidnight(startTime)) {
             if(!isAfterMidnight(bedTime)) {
-                if(isAfterMidnight(endTime)){
+                if(isAfterMidnight(endTime) && bedTime.isAfter(startTime)){
                     hoursWorkedBeforeMidnightAfterBedtime = MIDNIGHT_24 - bedTime.getHour();
-                } else if(bedTime.isBefore(endTime)) {
+                } else if(isAfterMidnight(endTime)){
+                    hoursWorkedBeforeMidnightAfterBedtime = MIDNIGHT_24 - startTime.getHour();
+                } else if(bedTime.isBefore(endTime) && bedTime.isAfter(startTime)) {
                     hoursWorkedBeforeMidnightAfterBedtime = Math.toIntExact(ChronoUnit.HOURS.between(bedTime, endTime));
+                } else if (bedTime.isBefore(endTime)) {
+                    hoursWorkedBeforeMidnightAfterBedtime = Math.toIntExact(ChronoUnit.HOURS.between(startTime, endTime));
                 }
             }
         }
@@ -100,7 +106,11 @@ public class BabysitterSchedule {
         verifyStartEndTimeOrdering();
     }
 
-    public void setBedTime(LocalTime bedTime) {
+    public void setBedTime(LocalTime bedTime) throws BedtimeOutOfBoundsException {
+        if (bedTime.isAfter(LATEST_END_TIME) && bedTime.isBefore(EARLIEST_START_TIME)) {
+            throw new BedtimeOutOfBoundsException();
+        }
+
         this.bedTime = roundUpToNextHour(bedTime);
     }
 

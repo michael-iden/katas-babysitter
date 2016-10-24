@@ -9,7 +9,7 @@ public class Babysitter {
 
     public int getCharge(BabysitterSchedule schedule) {
 
-        return getChargeAfterMidnight(schedule) + getChargeBeforeMidnightBeforeBedtime(schedule);
+        return getChargeAfterMidnight(schedule) + getChargeBeforeMidnightBeforeBedtime(schedule) + getChargeBeforeMidnightAfterBedtime(schedule);
     }
 
     private int getChargeAfterMidnight(BabysitterSchedule schedule) {
@@ -18,6 +18,10 @@ public class Babysitter {
 
     private int getChargeBeforeMidnightBeforeBedtime(BabysitterSchedule schedule) {
         return CHARGE_PER_HOUR_BEFORE_MIDNIGHT_BEFORE_BEDTIME * schedule.getHoursWorkedBeforeMidnightBeforeBedtime();
+    }
+
+    private int getChargeBeforeMidnightAfterBedtime(BabysitterSchedule schedule) {
+        return CHARGE_PER_HOUR_BEFORE_MIDNIGHT_AFTER_BEDTIME * schedule.getHoursWorkedBeforeMidnightAfterBedtime();
     }
 
 }
