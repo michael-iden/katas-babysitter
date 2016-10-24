@@ -23,7 +23,7 @@ public class BabysitterTest {
 
     @Test
     public void cannotEndAfter4AM() {
-        assertEquals(1, 0);
+        assertEquals(-1, babysitter.getCharge(LocalTime.parse("17:00:00"), LocalTime.parse("04:00:01"), LocalTime.MAX));
     }
 
     @Test
