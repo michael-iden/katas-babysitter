@@ -1,8 +1,11 @@
 package miden.kata;
 
+import lombok.Getter;
+
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
+@Getter
 public class Babysitter {
 
     //5:00 PM
@@ -22,21 +25,21 @@ public class Babysitter {
             throw new EndsTooLateException();
         }
 
-        this.startTime = startTime;
+        setStartTime(startTime);
         this.endTime = endTime;
-        this.bedTime = bedTime;
+        setBedTime(bedTime);
     }
 
     public int getCharge() {
         return -1;
     }
 
-    public LocalTime getStartTime() {
-        return roundDownToCurrentHour(startTime);
+    public void setStartTime(LocalTime startTime) {
+        this.startTime = roundDownToCurrentHour(startTime);
     }
 
-    public LocalTime getBedTime() {
-       return roundUpToNextHour(bedTime);
+    public void setBedTime(LocalTime bedTime) {
+        this.bedTime = roundUpToNextHour(bedTime);
     }
 
     private LocalTime roundUpToNextHour(LocalTime time) {
