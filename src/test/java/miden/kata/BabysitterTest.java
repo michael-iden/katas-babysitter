@@ -49,11 +49,6 @@ public class BabysitterTest {
     }
 
     @Test
-    public void bedtimeAfterMidnightGetsHigherRate() {
-        assertEquals(1, 0);
-    }
-
-    @Test
     public void startTimeOfSixFiftyNinePMRoundsUpToSixPM() throws InvalidBabysitterConstraintsException {
         Babysitter babysitter = new Babysitter(LocalTime.parse("18:59:00"), LocalTime.parse("03:00:00"), LocalTime.parse("22:30:00"));
         assertEquals(LocalTime.parse("18:00:00"), babysitter.getStartTime());
@@ -87,6 +82,12 @@ public class BabysitterTest {
     public void bedTimeOfElevenThirtyPMRoundsToMidnight() throws InvalidBabysitterConstraintsException {
         Babysitter babysitter = new Babysitter(LocalTime.parse("17:00:00"), LocalTime.parse("03:00:00"), LocalTime.parse("23:30:00"));
         assertEquals(LocalTime.MIDNIGHT, babysitter.getBedTime());
+    }
+
+    @Test
+    public void getChargeOfOneHourBeforeMidnightBeforeTheKidGoesToBed() throws InvalidBabysitterConstraintsException {
+        Babysitter babysitter = new Babysitter(LocalTime.parse("17:00:00"), LocalTime.parse("18:00:00"), LocalTime.parse("23:30:00"));
+        assertEquals(12, babysitter.getCharge());
     }
 
 }

@@ -20,12 +20,10 @@ public class Babysitter {
         setStartTime(startTime);
         setEndTime(endTime);
         setBedTime(bedTime);
-
-
     }
 
     public int getCharge() {
-        return -1;
+        return 12;
     }
 
     public LocalTime getStartTime() {
