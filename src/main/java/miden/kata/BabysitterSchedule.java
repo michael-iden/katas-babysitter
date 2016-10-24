@@ -26,14 +26,13 @@ public class BabysitterSchedule {
     public int getHoursWorkedAfterMidnight() {
 
         int hoursWorkedAfterMidnight = 0;
-        LocalTime afterMidnightStartTime = startTime;
 
         if(isAfterMidnight(endTime)) {
-            if(!isAfterMidnight(startTime)) {
-                afterMidnightStartTime = LocalTime.MIDNIGHT;
+            if(isAfterMidnight(startTime)) {
+                hoursWorkedAfterMidnight = Math.toIntExact(ChronoUnit.HOURS.between(startTime, endTime));
+            } else {
+                hoursWorkedAfterMidnight = Math.toIntExact(ChronoUnit.HOURS.between(LocalTime.MIDNIGHT, endTime));
             }
-
-            hoursWorkedAfterMidnight = Math.toIntExact(ChronoUnit.HOURS.between(afterMidnightStartTime, endTime));
         }
 
         return hoursWorkedAfterMidnight;
@@ -41,13 +40,14 @@ public class BabysitterSchedule {
 
     public int getHoursWorkedBeforeMidnightBeforeBedtime() {
         int hoursWorkedBeforeMidnightBeforeBedtime = 0;
-        LocalTime beforeMidnightEndTime = endTime;
 
         if(!isAfterMidnight(startTime)) {
-            if(isAfterMidnight(endTime)) {
+            if(isAfterMidnight(endTime) && isAfterMidnight(bedTime)) {
                 hoursWorkedBeforeMidnightBeforeBedtime = MIDNIGHT_24 - startTime.getHour();
+            } else if(bedTime.isBefore(endTime) || isAfterMidnight(endTime)) {
+                hoursWorkedBeforeMidnightBeforeBedtime = Math.toIntExact(ChronoUnit.HOURS.between(startTime, bedTime));
             } else {
-                hoursWorkedBeforeMidnightBeforeBedtime = Math.toIntExact(ChronoUnit.HOURS.between(startTime, beforeMidnightEndTime));
+                hoursWorkedBeforeMidnightBeforeBedtime = Math.toIntExact(ChronoUnit.HOURS.between(startTime, endTime));
             }
         }
 
