@@ -27,8 +27,8 @@ public class BabysitterSchedule {
 
         int hoursWorkedAfterMidnight = 0;
 
-        if(isAfterMidnight(endTime)) {
-            if(isAfterMidnight(startTime)) {
+        if (isAfterMidnight(endTime)) {
+            if (isAfterMidnight(startTime)) {
                 hoursWorkedAfterMidnight = Math.toIntExact(ChronoUnit.HOURS.between(startTime, endTime));
             } else {
                 hoursWorkedAfterMidnight = Math.toIntExact(ChronoUnit.HOURS.between(LocalTime.MIDNIGHT, endTime));
@@ -41,11 +41,11 @@ public class BabysitterSchedule {
     public int getHoursWorkedBeforeMidnightBeforeBedtime() {
         int hoursWorkedBeforeMidnightBeforeBedtime = 0;
 
-        if(!isAfterMidnight(startTime)) {
-            if(isAfterMidnight(endTime) && isAfterMidnight(bedTime)) {
+        if (!isAfterMidnight(startTime)) {
+            if (isAfterMidnight(endTime) && isAfterMidnight(bedTime)) {
                 hoursWorkedBeforeMidnightBeforeBedtime = MIDNIGHT_24 - startTime.getHour();
-            } else if(bedTime.isAfter(startTime)) {
-                if(bedTime.isBefore(endTime) || isAfterMidnight(endTime)) {
+            } else if (bedTime.isAfter(startTime)) {
+                if (bedTime.isBefore(endTime) || isAfterMidnight(endTime)) {
                     hoursWorkedBeforeMidnightBeforeBedtime = Math.toIntExact(ChronoUnit.HOURS.between(startTime, bedTime));
                 } else if (bedTime.isAfter(endTime) && !isAfterMidnight(endTime)) {
                     hoursWorkedBeforeMidnightBeforeBedtime = Math.toIntExact(ChronoUnit.HOURS.between(startTime, endTime));
@@ -59,13 +59,13 @@ public class BabysitterSchedule {
     public int getHoursWorkedBeforeMidnightAfterBedtime() {
         int hoursWorkedBeforeMidnightAfterBedtime = 0;
 
-        if(!isAfterMidnight(startTime)) {
-            if(!isAfterMidnight(bedTime)) {
-                if(isAfterMidnight(endTime) && bedTime.isAfter(startTime)){
+        if (!isAfterMidnight(startTime)) {
+            if (!isAfterMidnight(bedTime)) {
+                if (isAfterMidnight(endTime) && bedTime.isAfter(startTime)) {
                     hoursWorkedBeforeMidnightAfterBedtime = MIDNIGHT_24 - bedTime.getHour();
-                } else if(isAfterMidnight(endTime)){
+                } else if (isAfterMidnight(endTime)) {
                     hoursWorkedBeforeMidnightAfterBedtime = MIDNIGHT_24 - startTime.getHour();
-                } else if(bedTime.isBefore(endTime) && bedTime.isAfter(startTime)) {
+                } else if (bedTime.isBefore(endTime) && bedTime.isAfter(startTime)) {
                     hoursWorkedBeforeMidnightAfterBedtime = Math.toIntExact(ChronoUnit.HOURS.between(bedTime, endTime));
                 } else if (bedTime.isBefore(endTime)) {
                     hoursWorkedBeforeMidnightAfterBedtime = Math.toIntExact(ChronoUnit.HOURS.between(startTime, endTime));
@@ -89,7 +89,7 @@ public class BabysitterSchedule {
     }
 
     public void setStartTime(LocalTime startTime) throws InvalidBabysitterConstraintsException {
-        if(startTime.isBefore(EARLIEST_START_TIME) && startTime.isAfter(LATEST_END_TIME)) {
+        if (startTime.isBefore(EARLIEST_START_TIME) && startTime.isAfter(LATEST_END_TIME)) {
             throw new StartsTooEarlyException();
         }
 
@@ -115,7 +115,7 @@ public class BabysitterSchedule {
     }
 
     private boolean isAfterMidnight(LocalTime time) {
-        if(!time.isAfter(LATEST_END_TIME)) {
+        if (!time.isAfter(LATEST_END_TIME)) {
             return true;
         }
 
@@ -127,7 +127,7 @@ public class BabysitterSchedule {
 
         LocalTime roundedUpTime;
         LocalTime roundedDownTime = roundDownToCurrentHour(time);
-        if(roundedDownTime.equals(time)) {
+        if (roundedDownTime.equals(time)) {
             roundedUpTime = roundedDownTime;
         } else {
             roundedUpTime = roundedDownTime.plusHours(1);
@@ -142,11 +142,11 @@ public class BabysitterSchedule {
 
     private void verifyStartEndTimeOrdering() throws EndBeforeStartException {
 
-        if(startTime == null || endTime == null) {
+        if (startTime == null || endTime == null) {
             return;
         }
 
-        if(startIsAfterMidnightAndEndIsBeforeMidnight()
+        if (startIsAfterMidnightAndEndIsBeforeMidnight()
                 || startIsAfterEndWithBothBeforeMidnight()
                 || startIsAfterEndWithBothAfterMidnight()) {
             throw new EndBeforeStartException();
