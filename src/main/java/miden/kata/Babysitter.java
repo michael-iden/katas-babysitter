@@ -16,14 +16,9 @@ public class Babysitter {
     private LocalTime bedTime;
 
     public Babysitter(LocalTime startTime, LocalTime endTime, LocalTime bedTime) throws StartsTooEarlyException, EndsTooLateException {
-        if(startTime.isBefore(EARLIEST_START_TIME)) {
-            throw new StartsTooEarlyException();
-        } else if (endTime.isAfter(LATEST_END_TIME)) {
-            throw new EndsTooLateException();
-        }
 
         setStartTime(startTime);
-        this.endTime = endTime;
+        setEndTime(endTime);
         setBedTime(bedTime);
     }
 
@@ -43,8 +38,20 @@ public class Babysitter {
         return bedTime;
     }
 
-    public void setStartTime(LocalTime startTime) {
+    public void setStartTime(LocalTime startTime) throws StartsTooEarlyException {
+        if(startTime.isBefore(EARLIEST_START_TIME) && startTime.isAfter(LATEST_END_TIME)) {
+            throw new StartsTooEarlyException();
+        }
+
         this.startTime = roundDownToCurrentHour(startTime);
+    }
+
+    public void setEndTime(LocalTime endTime) throws EndsTooLateException {
+        if (endTime.isAfter(LATEST_END_TIME) && endTime.isBefore(EARLIEST_START_TIME)) {
+            throw new EndsTooLateException();
+        }
+
+        this.endTime = roundUpToNextHour(endTime);
     }
 
     public void setBedTime(LocalTime bedTime) {
@@ -52,7 +59,16 @@ public class Babysitter {
     }
 
     private LocalTime roundUpToNextHour(LocalTime time) {
-        return time.truncatedTo(ChronoUnit.HOURS).plusHours(1);
+
+        LocalTime roundedUpTime;
+        LocalTime roundedDownTime = roundDownToCurrentHour(time);
+        if(roundedDownTime.equals(time)) {
+            roundedUpTime = roundedDownTime;
+        } else {
+            roundedUpTime = roundedDownTime.plusHours(1);
+        }
+
+        return roundedUpTime;
     }
 
     private LocalTime roundDownToCurrentHour(LocalTime time) {
