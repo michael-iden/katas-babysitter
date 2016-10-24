@@ -1,6 +1,5 @@
 package miden.kata;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalTime;
@@ -35,8 +34,15 @@ public class BabysitterTest {
     }
 
     @Test
-    public void bedTimeRoundsUpToEndOfHour() {
-        assertEquals(1, 0);
+    public void bedTimeOfTenThirtyPMRoundsUpToEleven() throws StartsTooEarlyException, EndsTooLateException {
+        Babysitter babysitter = new Babysitter(LocalTime.parse("17:00:00"), LocalTime.parse("03:00:00"), LocalTime.parse("22:30:00"));
+        assertEquals(LocalTime.parse("23:00:00"), babysitter.getRoundedBedTime());
+    }
+
+    @Test
+    public void bedTimeOfElevenThirtyPMRoundsToMidnight() throws StartsTooEarlyException, EndsTooLateException {
+        Babysitter babysitter = new Babysitter(LocalTime.parse("17:00:00"), LocalTime.parse("03:00:00"), LocalTime.parse("23:30:00"));
+        assertEquals(LocalTime.MIDNIGHT, babysitter.getRoundedBedTime());
     }
 
 }
