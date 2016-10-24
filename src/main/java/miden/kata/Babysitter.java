@@ -23,7 +23,9 @@ public class Babysitter {
     }
 
     public int getCharge() {
-        return 12;
+
+        int hoursWorked = Math.toIntExact(ChronoUnit.HOURS.between(startTime, endTime));
+        return 12 * hoursWorked;
     }
 
     public LocalTime getStartTime() {

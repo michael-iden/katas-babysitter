@@ -90,4 +90,10 @@ public class BabysitterTest {
         assertEquals(12, babysitter.getCharge());
     }
 
+    @Test
+    public void getChargeFor2HoursBeforeMidnightBeforeTheKidGoesToBed() throws InvalidBabysitterConstraintsException {
+        Babysitter babysitter = new Babysitter(LocalTime.parse("17:00:00"), LocalTime.parse("19:00:00"), LocalTime.parse("23:30:00"));
+        assertEquals(24, babysitter.getCharge());
+    }
+
 }
