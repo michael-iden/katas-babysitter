@@ -9,21 +9,14 @@ import static org.junit.Assert.assertEquals;
 
 public class BabysitterTest {
 
-    private Babysitter babysitter;
-
-    @Before
-    public void setUp() {
-        babysitter = new Babysitter();
+    @Test(expected = StartsTooEarlyException.class)
+    public void cannotStartBefore5PM() throws StartsTooEarlyException, EndsTooLateException {
+        new Babysitter(LocalTime.parse("16:59:59"), LocalTime.MAX, LocalTime.MAX);
     }
 
-    @Test
-    public void cannotStartBefore5PM() {
-        assertEquals(-1, babysitter.getCharge(LocalTime.parse("16:59:59"), LocalTime.MAX, LocalTime.MAX));
-    }
-
-    @Test
-    public void cannotEndAfter4AM() {
-        assertEquals(-1, babysitter.getCharge(LocalTime.parse("17:00:00"), LocalTime.parse("04:00:01"), LocalTime.MAX));
+    @Test(expected = EndsTooLateException.class)
+    public void cannotEndAfter4AM() throws StartsTooEarlyException, EndsTooLateException {
+        new Babysitter(LocalTime.parse("17:00:00"), LocalTime.parse("04:00:01"), LocalTime.MAX);
     }
 
     @Test
@@ -42,7 +35,7 @@ public class BabysitterTest {
     }
 
     @Test
-    public void bedTimeRoundsDownToBeginningOfHour() {
+    public void bedTimeRoundsUpToEndOfHour() {
         assertEquals(1, 0);
     }
 
