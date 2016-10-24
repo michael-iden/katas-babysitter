@@ -11,6 +11,11 @@ public class Babysitter {
     //4:00 AM
     private static final LocalTime LATEST_END_TIME = LocalTime.of(4, 0);
 
+    private static final int CHARGE_PER_HOUR_AFTER_MIDNIGHT = 16;
+    private static final int CHARGE_PER_HOUR_BEFORE_MIDNIGHT_BEFORE_BEDTIME = 12;
+    private static final int CHARGE_PER_HOUR_BEFORE_MIDNIGHT_AFTER_BEDTIME = 8;
+    private static final int MIDNIGHT_24 = 24;
+
     private LocalTime startTime;
     private LocalTime endTime;
     private LocalTime bedTime;
@@ -24,8 +29,36 @@ public class Babysitter {
 
     public int getCharge() {
 
-        int hoursWorked = Math.toIntExact(ChronoUnit.HOURS.between(startTime, endTime));
-        return 12 * hoursWorked;
+        return getChargeAfterMidnight() + getChargeBeforeMidnightBeforeBedtime();
+    }
+
+    private int getChargeAfterMidnight() {
+        int hoursWorkedAfterMidnight = 0;
+        LocalTime afterMidnightStartTime = startTime;
+
+        if(!endTime.isAfter(LATEST_END_TIME)) {
+            if(!startTime.isBefore(EARLIEST_START_TIME)) {
+                afterMidnightStartTime = LocalTime.MIDNIGHT;
+            }
+            hoursWorkedAfterMidnight = Math.toIntExact(ChronoUnit.HOURS.between(afterMidnightStartTime, endTime));
+        }
+
+        return CHARGE_PER_HOUR_AFTER_MIDNIGHT * hoursWorkedAfterMidnight;
+    }
+
+    private int getChargeBeforeMidnightBeforeBedtime() {
+        int hoursWorkedBeforeMidnightBeforeBedtime = 0;
+        LocalTime beforeMidnightEndTime = endTime;
+
+        if(!startTime.isBefore(EARLIEST_START_TIME)) {
+            if(!endTime.isAfter(LATEST_END_TIME)) {
+                hoursWorkedBeforeMidnightBeforeBedtime = MIDNIGHT_24 - startTime.getHour();
+            } else {
+                hoursWorkedBeforeMidnightBeforeBedtime = Math.toIntExact(ChronoUnit.HOURS.between(startTime, beforeMidnightEndTime));
+            }
+        }
+
+        return CHARGE_PER_HOUR_BEFORE_MIDNIGHT_BEFORE_BEDTIME * hoursWorkedBeforeMidnightBeforeBedtime;
     }
 
     public LocalTime getStartTime() {

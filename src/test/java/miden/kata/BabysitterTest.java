@@ -85,15 +85,27 @@ public class BabysitterTest {
     }
 
     @Test
-    public void getChargeOfOneHourBeforeMidnightBeforeTheKidGoesToBed() throws InvalidBabysitterConstraintsException {
+    public void chargeOfOneHourBeforeMidnightBeforeBedtimeEquals12() throws InvalidBabysitterConstraintsException {
         Babysitter babysitter = new Babysitter(LocalTime.parse("17:00:00"), LocalTime.parse("18:00:00"), LocalTime.parse("23:30:00"));
         assertEquals(12, babysitter.getCharge());
     }
 
     @Test
-    public void getChargeFor2HoursBeforeMidnightBeforeTheKidGoesToBed() throws InvalidBabysitterConstraintsException {
+    public void chargeFor2HoursBeforeMidnightBeforeBedtimeEquals24() throws InvalidBabysitterConstraintsException {
         Babysitter babysitter = new Babysitter(LocalTime.parse("17:00:00"), LocalTime.parse("19:00:00"), LocalTime.parse("23:30:00"));
         assertEquals(24, babysitter.getCharge());
+    }
+
+    @Test
+    public void chargeFor4HoursBeforeMidnightBeforeBedtimeEquals48() throws InvalidBabysitterConstraintsException {
+        Babysitter babysitter = new Babysitter(LocalTime.parse("17:00:00"), LocalTime.parse("21:00:00"), LocalTime.parse("23:30:00"));
+        assertEquals(48, babysitter.getCharge());
+    }
+
+    @Test
+    public void chargeFor2HoursBeforeMidnightAnd2HoursAfterMidnightBeforeBedtimeEquals56() throws InvalidBabysitterConstraintsException {
+        Babysitter babysitter = new Babysitter(LocalTime.parse("22:00:00"), LocalTime.parse("02:00:00"), LocalTime.parse("03:00:00"));
+        assertEquals(56, babysitter.getCharge());
     }
 
 }
