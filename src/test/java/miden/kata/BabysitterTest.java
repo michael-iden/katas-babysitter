@@ -24,8 +24,15 @@ public class BabysitterTest {
     }
 
     @Test
-    public void startTimeRoundsDownToStartOfHour() {
-        assertEquals(1, 0);
+    public void startTimeOfSixFiftyNinePMRoundsUpToSixPM() throws StartsTooEarlyException, EndsTooLateException {
+        Babysitter babysitter = new Babysitter(LocalTime.parse("18:59:00"), LocalTime.parse("03:00:00"), LocalTime.parse("22:30:00"));
+        assertEquals(LocalTime.parse("18:00:00"), babysitter.getStartTime());
+    }
+
+    @Test
+    public void startTimeOfEightElevenPMRoundsToEightPM() throws StartsTooEarlyException, EndsTooLateException {
+        Babysitter babysitter = new Babysitter(LocalTime.parse("19:11:00"), LocalTime.parse("03:00:00"), LocalTime.parse("23:30:00"));
+        assertEquals(LocalTime.parse("19:00:00"), babysitter.getStartTime());
     }
 
     @Test
@@ -36,13 +43,13 @@ public class BabysitterTest {
     @Test
     public void bedTimeOfTenThirtyPMRoundsUpToEleven() throws StartsTooEarlyException, EndsTooLateException {
         Babysitter babysitter = new Babysitter(LocalTime.parse("17:00:00"), LocalTime.parse("03:00:00"), LocalTime.parse("22:30:00"));
-        assertEquals(LocalTime.parse("23:00:00"), babysitter.getRoundedBedTime());
+        assertEquals(LocalTime.parse("23:00:00"), babysitter.getBedTime());
     }
 
     @Test
     public void bedTimeOfElevenThirtyPMRoundsToMidnight() throws StartsTooEarlyException, EndsTooLateException {
         Babysitter babysitter = new Babysitter(LocalTime.parse("17:00:00"), LocalTime.parse("03:00:00"), LocalTime.parse("23:30:00"));
-        assertEquals(LocalTime.MIDNIGHT, babysitter.getRoundedBedTime());
+        assertEquals(LocalTime.MIDNIGHT, babysitter.getBedTime());
     }
 
 }
