@@ -15,11 +15,13 @@ public class Babysitter {
     private LocalTime endTime;
     private LocalTime bedTime;
 
-    public Babysitter(LocalTime startTime, LocalTime endTime, LocalTime bedTime) throws StartsTooEarlyException, EndsTooLateException {
+    public Babysitter(LocalTime startTime, LocalTime endTime, LocalTime bedTime) throws InvalidBabysitterConstraintsException {
 
         setStartTime(startTime);
         setEndTime(endTime);
         setBedTime(bedTime);
+
+
     }
 
     public int getCharge() {
@@ -38,20 +40,22 @@ public class Babysitter {
         return bedTime;
     }
 
-    public void setStartTime(LocalTime startTime) throws StartsTooEarlyException {
+    public void setStartTime(LocalTime startTime) throws InvalidBabysitterConstraintsException {
         if(startTime.isBefore(EARLIEST_START_TIME) && startTime.isAfter(LATEST_END_TIME)) {
             throw new StartsTooEarlyException();
         }
 
         this.startTime = roundDownToCurrentHour(startTime);
+        verifyStartEndTimeOrdering();
     }
 
-    public void setEndTime(LocalTime endTime) throws EndsTooLateException {
+    public void setEndTime(LocalTime endTime) throws InvalidBabysitterConstraintsException {
         if (endTime.isAfter(LATEST_END_TIME) && endTime.isBefore(EARLIEST_START_TIME)) {
             throw new EndsTooLateException();
         }
 
         this.endTime = roundUpToNextHour(endTime);
+        verifyStartEndTimeOrdering();
     }
 
     public void setBedTime(LocalTime bedTime) {
@@ -75,6 +79,29 @@ public class Babysitter {
         return time.truncatedTo(ChronoUnit.HOURS);
     }
 
+    private void verifyStartEndTimeOrdering() throws EndBeforeStartException {
 
+        if(startTime == null || endTime == null) {
+            return;
+        }
+
+        if(startIsAfterMidnightAndEndIsBeforeMidnight()
+                || startIsAfterEndWithBothBeforeMidnight()
+                || startIsAfterEndWithBothAfterMidnight()) {
+            throw new EndBeforeStartException();
+        }
+    }
+
+    private boolean startIsAfterMidnightAndEndIsBeforeMidnight() {
+        return startTime.isBefore(LATEST_END_TIME) && endTime.isAfter(EARLIEST_START_TIME) && endTime.isBefore(LocalTime.MAX);
+    }
+
+    private boolean startIsAfterEndWithBothBeforeMidnight() {
+        return startTime.isAfter(endTime) && startTime.isAfter(EARLIEST_START_TIME) && endTime.isAfter(EARLIEST_START_TIME);
+    }
+
+    private boolean startIsAfterEndWithBothAfterMidnight() {
+        return startTime.isAfter(endTime) && startTime.isBefore(LATEST_END_TIME) && endTime.isBefore(LATEST_END_TIME);
+    }
 
 }
