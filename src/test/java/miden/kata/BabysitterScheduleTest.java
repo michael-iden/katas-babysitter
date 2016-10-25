@@ -179,4 +179,19 @@ public class BabysitterScheduleTest {
         BabysitterSchedule babysitterSchedule = new BabysitterSchedule(LocalTime.parse("17:00:00"), LocalTime.parse("21:00:00"), LocalTime.parse("19:00:00"));
         assertEquals(0, babysitterSchedule.getHoursWorkedAfterMidnight());
     }
+
+    @Test(expected = NullTimeException.class)
+    public void passingInNullStartTimeExplodesGracefully() throws InvalidBabysitterConstraintsException {
+        new BabysitterSchedule(null, LocalTime.parse("21:00:00"), LocalTime.parse("19:00:00"));
+    }
+
+    @Test(expected = NullTimeException.class)
+    public void passingInNullEndTimeExplodesGracefully() throws InvalidBabysitterConstraintsException {
+        new BabysitterSchedule(LocalTime.parse("21:00:00"), null, LocalTime.parse("19:00:00"));
+    }
+
+    @Test(expected = NullTimeException.class)
+    public void passingInNullBedTimeExplodesGracefully() throws InvalidBabysitterConstraintsException {
+        new BabysitterSchedule(LocalTime.parse("21:00:00"), LocalTime.parse("21:00:00"), null);
+    }
 }

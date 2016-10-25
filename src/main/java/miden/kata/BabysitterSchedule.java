@@ -89,7 +89,9 @@ public class BabysitterSchedule {
     }
 
     public void setStartTime(LocalTime startTime) throws InvalidBabysitterConstraintsException {
-        if (startTime.isBefore(EARLIEST_START_TIME) && startTime.isAfter(LATEST_END_TIME)) {
+        if(startTime == null) {
+            throw new NullTimeException("Cannot set start time to null");
+        } else if (startTime.isBefore(EARLIEST_START_TIME) && startTime.isAfter(LATEST_END_TIME)) {
             throw new StartsTooEarlyException();
         }
 
@@ -98,7 +100,9 @@ public class BabysitterSchedule {
     }
 
     public void setEndTime(LocalTime endTime) throws InvalidBabysitterConstraintsException {
-        if (endTime.isAfter(LATEST_END_TIME) && endTime.isBefore(EARLIEST_START_TIME)) {
+        if(endTime == null) {
+            throw new NullTimeException("Cannot set end time to null");
+        } else if (endTime.isAfter(LATEST_END_TIME) && endTime.isBefore(EARLIEST_START_TIME)) {
             throw new EndsTooLateException();
         }
 
@@ -106,8 +110,10 @@ public class BabysitterSchedule {
         verifyStartEndTimeOrdering();
     }
 
-    public void setBedTime(LocalTime bedTime) throws BedtimeOutOfBoundsException {
-        if (bedTime.isAfter(LATEST_END_TIME) && bedTime.isBefore(EARLIEST_START_TIME)) {
+    public void setBedTime(LocalTime bedTime) throws InvalidBabysitterConstraintsException {
+        if(bedTime == null) {
+            throw new NullTimeException("Cannot set bed time to null");
+        } else if (bedTime.isAfter(LATEST_END_TIME) && bedTime.isBefore(EARLIEST_START_TIME)) {
             throw new BedtimeOutOfBoundsException();
         }
 
